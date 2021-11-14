@@ -1,3 +1,3 @@
-const a = 1;
+import { init } from './canvas';
 
-console.log(a);
+init();
