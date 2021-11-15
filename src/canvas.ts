@@ -1,3 +1,5 @@
+import { Config } from "./config";
+
 export interface Canvas {
   element: HTMLCanvasElement | null;
   context: CanvasRenderingContext2D | null;
@@ -14,6 +16,8 @@ const canvas: Canvas = {
   pixelScale: 1
 };
 
+let config: Config | undefined;
+
 export function calculatePixelScale (
   screenWidth: number,
   screenHeight: number,
@@ -22,8 +26,14 @@ export function calculatePixelScale (
   const actualDimensions = screenIsLandscape ? screenHeight : screenWidth;
   const aliasingThreshold = 2;
   
-  const scale = actualDimensions / canvas.dimensions;
-  return scale < aliasingThreshold ? scale : Math.floor(scale);
+  let scale = actualDimensions / canvas.dimensions;
+  scale = scale < aliasingThreshold ? scale : Math.floor(scale);
+
+  if (config?.debug.console) {
+    console.log(`pixel scale: ${scale}`);
+  }
+
+  return scale;
 }
 
 export function updateCanvas (
@@ -51,15 +61,17 @@ function handleResize (): void {
   updateCanvas(screenWidth, screenHeight, screenIsLandscape);
 }
 
-export function init (options: CanvasOptions = {}): void {
-  const config = {
+export function init (params: CanvasOptions = {}, configs?: Config): void {
+  const options = {
     dimensions: 256,
-    ...options
+    ...params
   };
+
+  config = configs;
 
   canvas.element = document.querySelector('canvas');
   canvas.context = canvas.element!.getContext('2d');
-  canvas.dimensions = config.dimensions;
+  canvas.dimensions = options.dimensions;
 
   handleResize();
 
