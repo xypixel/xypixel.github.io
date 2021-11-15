@@ -38,7 +38,13 @@ describe('canvas', () => {
     });
   });
 
-  xdescribe('handle resizing', () => {
+  xdescribe('calculatePixelScale()', () => {
+    it('sets correct pixel scale when viewport is landscape', () => {
+      //
+    });
+  });
+
+  xdescribe('updateCanvas()', () => {
     it('', () => {
       //
     });

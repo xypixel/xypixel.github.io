@@ -5,20 +5,32 @@ export interface Canvas {
   pixelScale: number;
 }
 
-export interface CanvasOptions {
-  dimensions?: number;
-}
+export type CanvasOptions = Partial<Pick<Canvas, 'dimensions'>>;
 
-function handleResize (): void {
-  const screenWidth = window.innerWidth;
-  const screenHeight = window.innerHeight;
-  const screenIsLandscape = screenWidth > screenHeight;
+const canvas: Canvas = {
+  element: null,
+  context: null,
+  dimensions: 256,
+  pixelScale: 1
+};
+
+export function calculatePixelScale (
+  screenWidth: number,
+  screenHeight: number,
+  screenIsLandscape: boolean
+): number {
   const actualDimensions = screenIsLandscape ? screenHeight : screenWidth;
   const aliasingThreshold = 2;
   
   const scale = actualDimensions / canvas.dimensions;
-  canvas.pixelScale = scale < aliasingThreshold ? scale : Math.floor(scale);
+  return scale < aliasingThreshold ? scale : Math.floor(scale);
+}
 
+export function updateCanvas (
+  screenWidth: number,
+  screenHeight: number,
+  screenIsLandscape: boolean
+): void {
   const dimensions = canvas.dimensions * canvas.pixelScale;
 
   canvas.element!.width = dimensions;
@@ -30,12 +42,14 @@ function handleResize (): void {
     '0';
 }
 
-const canvas: Canvas = {
-  element: null,
-  context: null,
-  dimensions: 256,
-  pixelScale: 1
-};
+function handleResize (): void {
+  const screenWidth = window.innerWidth;
+  const screenHeight = window.innerHeight;
+  const screenIsLandscape = screenWidth > screenHeight;
+  
+  canvas.pixelScale = calculatePixelScale(screenWidth, screenHeight, screenIsLandscape);
+  updateCanvas(screenWidth, screenHeight, screenIsLandscape);
+}
 
 export function init (options: CanvasOptions = {}): void {
   const config = {
