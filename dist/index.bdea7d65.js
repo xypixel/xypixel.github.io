@@ -483,7 +483,7 @@ function drawRect(x, y, width, height, fill) {
     context.globalAlpha = globalAlpha;
 }
 function draw() {
-    drawRect(4, 4, 64, 128, '#c0ffe1');
+    drawRect(4, 4, 64, 128, '#c0ffee');
     requestAnimationFrame(()=>{
         draw();
     });
