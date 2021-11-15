@@ -461,6 +461,34 @@ function hmrAcceptRun(bundle, id) {
 },{}],"7PGg5":[function(require,module,exports) {
 var _canvas = require("./canvas");
 _canvas.init();
+function drawRect(x, y, width, height, fill) {
+    const ppp = _canvas.getCanvas().pixelScale;
+    const context = _canvas.getCanvas().context;
+    const globalAlpha = context.globalAlpha;
+    context.globalAlpha = 1;
+    if (fill) {
+        context.fillStyle = fill;
+        context.fillRect(x * ppp, y * ppp, width * ppp, height * ppp);
+    }
+    // if (strokeColor) {
+    //   context.strokeStyle = strokeColor;
+    //   context.lineWidth = strokeWidth;
+    //   context.strokeRect(
+    //     x * ppp,
+    //     y * ppp,
+    //     width * ppp,
+    //     height * ppp
+    //   );
+    // }
+    context.globalAlpha = globalAlpha;
+}
+function draw() {
+    drawRect(4, 4, 64, 128, '#c0ffee');
+    requestAnimationFrame(()=>{
+        draw();
+    });
+}
+draw();
 
 },{"./canvas":"fmWip"}],"fmWip":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
@@ -469,47 +497,50 @@ parcelHelpers.export(exports, "init", ()=>init
 );
 parcelHelpers.export(exports, "getCanvas", ()=>getCanvas
 );
+parcelHelpers.export(exports, "resetCanvas", ()=>resetCanvas
+);
+function handleResize() {
+    const screenWidth = window.innerWidth;
+    const screenHeight = window.innerHeight;
+    const screenIsLandscape = screenWidth > screenHeight;
+    const actualDimensions = screenIsLandscape ? screenHeight : screenWidth;
+    const aliasingThreshold = 2;
+    const scale = actualDimensions / canvas.dimensions;
+    canvas.pixelScale = scale < aliasingThreshold ? scale : Math.floor(scale);
+    const dimensions = canvas.dimensions * canvas.pixelScale;
+    canvas.element.width = dimensions;
+    canvas.element.height = dimensions;
+    canvas.element.style.left = `${screenWidth / 2 - dimensions / 2}px`;
+    canvas.element.style.top = screenIsLandscape ? `${screenHeight / 2 - dimensions / 2}px` : '0';
+}
 const canvas = {
     element: null,
     context: null,
-    ratio: '',
-    ppp: 1
+    dimensions: 256,
+    pixelScale: 1
 };
-function parseRatio(ratio) {
-    const characters = ratio.split(':');
-    return {
-        x: parseInt(characters[0], 10),
-        y: parseInt(characters[1], 10)
-    };
-}
-function handleResize() {
-    const vpWidth = window.innerWidth;
-    const vpHeight = window.innerHeight;
-    // const isLandscape = vpWidth > vpHeight;
-    const ratio = parseRatio(canvas.ratio);
-// let canvasWidth = isLandscape ? ratio.x * (vpHeight / ratio.y) : vpWidth;
-// let canvasHeight = isLandscape ? vpHeight : ratio.y * (vpWidth / ratio.x);
-// canvas.element!.width = canvasWidth;
-// canvas.element!.height = canvasHeight;
-}
 function init(options = {
 }) {
     const config = {
-        ratio: '4:3',
-        ppp: 1,
+        dimensions: 256,
         ...options
     };
     canvas.element = document.querySelector('canvas');
     canvas.context = canvas.element.getContext('2d');
-    canvas.ratio = config.ratio;
-    canvas.ppp = config.ppp;
+    canvas.dimensions = config.dimensions;
     handleResize();
     window.onresize = handleResize;
     window.ondeviceorientation = handleResize;
 }
 function getCanvas() {
-    if (!canvas.element) throw new Error('call canvas#init first');
+    if (!canvas.element) throw new Error('Please call canvas#init first');
     return canvas;
+}
+function resetCanvas() {
+    canvas.element = null;
+    canvas.context = null;
+    canvas.dimensions = 256;
+    canvas.pixelScale = 1;
 }
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV"}],"ciiiV":[function(require,module,exports) {

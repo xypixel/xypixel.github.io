@@ -4,6 +4,7 @@
   "description": "",
   "source": "src/index.html",
   "scripts": {
+    "deploy": "./scripts/deploy.sh",
     "dev": "npx parcel src/index.html",
     "build": "npx parcel build"
   },
@@ -11,6 +12,8 @@
   "license": "none",
   "devDependencies": {
     "@types/jest": "^27.0.2",
+    "canvas": "^2.8.0",
+    "jest": "^27.3.1",
     "jest-cli": "^27.3.1",
     "parcel": "^2.0.1",
     "ts-jest": "^27.0.7",
