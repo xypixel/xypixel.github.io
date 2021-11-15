@@ -2,9 +2,12 @@ import * as config from '~src/config';
 import * as canvas from '../src/canvas';
 
 config.init({
-  title: 'Draw Rectangle'
+  title: 'Draw Rectangle',
+  debug: {
+    console: true
+  }
 });
-canvas.init();
+canvas.init({}, config.getConfig());
 
 function drawRect (x: number, y: number, width: number, height: number, fill: string) {
   const ppp = canvas.getCanvas().pixelScale;
