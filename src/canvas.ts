@@ -7,7 +7,10 @@ export interface Canvas {
   pixelScale: number;
 }
 
-export type CanvasOptions = Partial<Pick<Canvas, 'dimensions'>>;
+export interface CanvasOptions {
+  options?: Partial<Pick<Canvas, 'dimensions'>>;
+  config?: Config;
+};
 
 const canvas: Canvas = {
   element: null,
@@ -61,13 +64,13 @@ function handleResize (): void {
   updateCanvas(screenWidth, screenHeight, screenIsLandscape);
 }
 
-export function init (params: CanvasOptions = {}, configs?: Config): void {
+export function init (params: CanvasOptions = {}): void {
   const options = {
     dimensions: 256,
-    ...params
+    ...params.options
   };
 
-  config = configs;
+  config = params.config;
 
   canvas.element = document.querySelector('canvas');
   canvas.context = canvas.element!.getContext('2d');

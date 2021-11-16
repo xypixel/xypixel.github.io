@@ -18,7 +18,9 @@ describe('canvas', () => {
 
     it('sets custom pixel scale', () => {
       canvas.init({
-        dimensions: 1024
+        options: {
+          dimensions: 1024
+        }
       });
       expect(canvas.getCanvas().dimensions).toBe(1024);
     });

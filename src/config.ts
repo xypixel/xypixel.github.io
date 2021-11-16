@@ -5,15 +5,19 @@ export interface Config {
   };
 }
 
+export interface ConfigOptions {
+  options?: Partial<Pick<Config, 'title' | 'debug'>>;
+}
+
 let config: Config;
 
-export function init (options: Partial<Config> = {}): void {
+export function init (params: ConfigOptions = {}): void {
   config = {
     title: 'XYPixel',
     debug: {
       console: false
     },
-    ...options
+    ...params.options
   };
 
   document.title = config.title;
