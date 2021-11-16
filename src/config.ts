@@ -23,6 +23,6 @@ export function init (params: ConfigOptions = {}): void {
   document.title = config.title;
 }
 
-export function getConfig (): Config {
+export function getRef (): Config {
   return config;
 }

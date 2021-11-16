@@ -1,16 +1,25 @@
-export type Buttons = 'up' | 'dn' | 'lt' | 'rt' | 'a' | 'b';
+import { Canvas } from "./canvas";
+
+export type Buttons = 'up' | 'dn' | 'lt' | 'rt' | 'select' | 'start' | 'b' | 'a';
+
 export interface ButtonsOptions {
   options: {
-    callback: (type: Buttons, event: Event) => void;
-  }
+    onPressDown: (type: Buttons, event: Event) => void;
+    onPressUp: (type: Buttons, event: Event) => void;
+  },
+  canvas?: Canvas;
 }
+
+let canvas: Canvas | undefined;
 
 function handleResize (): void {
   const screenWidth = window.innerWidth;
   const screenHeight = window.innerHeight;
   const screenIsLandscape = screenWidth > screenHeight;
   
-  //
+  if (screenIsLandscape) {
+    
+  }
 }
 
 export function init (params: ButtonsOptions): void {
@@ -19,18 +28,28 @@ export function init (params: ButtonsOptions): void {
     dn: null,
     lt: null,
     rt: null,
-    a: null,
-    b: null
+    select: null,
+    start: null,
+    b: null,
+    a: null
   };
+
+  canvas = params.canvas;
 
   for (const key in buttons) {
     if (Object.prototype.hasOwnProperty.call(buttons, key)) {
       buttons[<Buttons>key] = document.querySelector(`#${key}`);
       buttons[<Buttons>key]!.addEventListener('touchstart', (e) => {
-        params.options.callback(<Buttons>key, e);
+        params.options.onPressDown(<Buttons>key, e);
       });
       buttons[<Buttons>key]!.addEventListener('mousedown', (e) => {
-        params.options.callback(<Buttons>key, e);
+        params.options.onPressDown(<Buttons>key, e);
+      });
+      buttons[<Buttons>key]!.addEventListener('touchend', (e) => {
+        params.options.onPressUp(<Buttons>key, e);
+      });
+      buttons[<Buttons>key]!.addEventListener('mouseup', (e) => {
+        params.options.onPressUp(<Buttons>key, e);
       });
     }
   }

@@ -10,12 +10,12 @@ config.init({
   }
 });
 canvas.init({
-  config: config.getConfig()
+  config: config.getRef()
 });
 
 function drawRect (x: number, y: number, width: number, height: number, fill: string) {
-  const ppp = canvas.getCanvas().pixelScale;
-  const context = canvas.getCanvas().context!;
+  const ppp = canvas.getRef().pixelScale;
+  const context = canvas.getRef().context!;
   const globalAlpha = context.globalAlpha;
   
   context!.globalAlpha = 1;

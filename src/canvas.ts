@@ -82,12 +82,16 @@ export function init (params: CanvasOptions = {}): void {
   window.ondeviceorientation = handleResize;
 }
 
-export function getCanvas (): Canvas {
+export function getRef (): Canvas {
   if (!canvas.element) {
     throw new Error('Please call canvas#init first');
   }
 
   return canvas;
+}
+
+export function getBoundingRect (): DOMRect {
+  return canvas.element!.getBoundingClientRect();
 }
 
 export function resetCanvas (): void {

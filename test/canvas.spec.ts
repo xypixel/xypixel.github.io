@@ -13,7 +13,7 @@ describe('canvas', () => {
   describe('init()', () => {
     it('keeps default pixel scale', () => {
       canvas.init();
-      expect(canvas.getCanvas().dimensions).toBe(256);
+      expect(canvas.getRef().dimensions).toBe(256);
     });
 
     it('sets custom pixel scale', () => {
@@ -22,20 +22,20 @@ describe('canvas', () => {
           dimensions: 1024
         }
       });
-      expect(canvas.getCanvas().dimensions).toBe(1024);
+      expect(canvas.getRef().dimensions).toBe(1024);
     });
 
     it('queries element and creates context', () => {
       canvas.init();
-      expect(canvas.getCanvas().element).toBeTruthy();
-      expect(canvas.getCanvas().context).toBeTruthy();
+      expect(canvas.getRef().element).toBeTruthy();
+      expect(canvas.getRef().context).toBeTruthy();
     });
   });
 
-  describe('getCanvas()', () => {
+  describe('getRef()', () => {
     it('throws if element not found', () => {
       expect(() => {
-        canvas.getCanvas()
+        canvas.getRef()
       }).toThrowError('Please call canvas#init first');
     });
   });
