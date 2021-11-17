@@ -1,3 +1,7 @@
+import Canvas from "~src/Canvas";
 import Console from "../src/Console";
 
-new Console();
+const canvas = new Canvas();
+new Console({
+  canvas
+});

@@ -1,70 +1,72 @@
-export default class Console {
-  private leftConElement: HTMLDivElement;
-  private bodyElement: HTMLDivElement;
-  private screenElement: HTMLCanvasElement;
-  private rightConElement: HTMLDivElement;
+import Canvas from "./Canvas";
 
-  constructor () {
+export interface ConsoleParams {
+  canvas: Canvas;
+}
+
+export default class Console {
+  private canvas: Canvas;
+  private leftConElement: HTMLDivElement;
+  private rightConElement: HTMLDivElement;
+  private calculatedScreenDimensions: number = 256;
+
+  constructor (params: ConsoleParams) {
+    this.canvas = params.canvas;
     this.leftConElement = document.querySelector('#leftCon')!;
-    this.bodyElement = document.querySelector('#body')!;
-    this.screenElement = document.querySelector('canvas')!;
     this.rightConElement = document.querySelector('#rightCon')!;
 
-    this.positionPieces();
+    this.calculatePositionAndScale();
 
     window.addEventListener('resize', () => {
-      this.positionPieces();
+      this.calculatePositionAndScale();
     }, false);
     window.addEventListener('deviceorientation', () => {
-      this.positionPieces();
+      this.calculatePositionAndScale();
     }, false);
   }
 
-  private positionPieces (): void {
-    let screenWidth = window.innerWidth;
-    let screenHeight = window.innerHeight;
-    const screenIsLandscape = screenWidth > screenHeight;
+  private calculatePositionAndScale (): void {
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+    const viewportIsLandscape = viewportWidth > viewportHeight;
+    
+    this.calculatedScreenDimensions = Math.floor(
+      viewportIsLandscape ?
+        viewportWidth / viewportHeight < 2 ? viewportWidth / 2 : viewportHeight :
+        viewportHeight / viewportWidth < 2 ? viewportHeight / 2 : viewportWidth
+    );
 
-    let bodyDimensions;
+    this.canvas.element.width = this.calculatedScreenDimensions;
+    this.canvas.element.height = this.calculatedScreenDimensions;
 
-    if (screenIsLandscape) {
-      bodyDimensions = screenWidth / screenHeight < 2 ? screenWidth / 2 : screenHeight;
-    } else {
-      bodyDimensions = screenHeight / screenWidth < 2 ? screenHeight / 2 : screenWidth;
-    }
+    this.positionAndScaleElements(viewportWidth, viewportHeight, viewportIsLandscape);
+  }
 
-    this.leftConElement.style.width = `${bodyDimensions / 2}px`;
-    this.leftConElement.style.height = `${bodyDimensions}px`;
+  private positionAndScaleElements (
+    viewportWidth: number,
+    viewportHeight: number,
+    viewportIsLandscape: boolean
+  ): void {
+    const screenLeft = viewportWidth / 2 - this.calculatedScreenDimensions / 2;
+    const screenTop = viewportHeight / 2 - (viewportIsLandscape ? this.calculatedScreenDimensions / 2 : this.calculatedScreenDimensions);
+    const leftConLeft = viewportIsLandscape ? screenLeft - this.calculatedScreenDimensions / 2 : screenLeft;
+    const leftConTop = viewportIsLandscape ? screenTop : screenTop + this.calculatedScreenDimensions;
+    const rightConLeft = viewportIsLandscape ? screenLeft + this.calculatedScreenDimensions : screenLeft + this.calculatedScreenDimensions / 2;
+    const rightConTop = viewportIsLandscape ? screenTop : screenTop + this.calculatedScreenDimensions;
+    const conWidth = this.calculatedScreenDimensions / 2;
+    const conHeight = this.calculatedScreenDimensions;
+    
+    this.canvas.element.style.left = `${screenLeft}px`;
+    this.canvas.element.style.top = `${screenTop}px`;
 
-    this.bodyElement.style.width = `${bodyDimensions}px`;
-    this.bodyElement.style.height = `${bodyDimensions}px`;
-    this.bodyElement.style.left = `${screenWidth / 2 - bodyDimensions / 2}px`;
+    this.leftConElement.style.left = `${leftConLeft}px`;
+    this.leftConElement.style.top = `${leftConTop}px`;
+    this.leftConElement.style.width = `${conWidth}px`;
+    this.leftConElement.style.height = `${conHeight}px`;
 
-    this.rightConElement.style.width = `${bodyDimensions / 2}px`;
-    this.rightConElement.style.height = `${bodyDimensions}px`;
-
-    if (screenIsLandscape) {
-      this.leftConElement.style.left = `${screenWidth / 2 - bodyDimensions}px`;
-      this.leftConElement.style.top = `${screenHeight / 2 - bodyDimensions / 2}px`;
-
-      this.bodyElement.style.top = `${screenHeight / 2 - bodyDimensions / 2}px`;
-
-      this.rightConElement.style.left = `${screenWidth / 2 + bodyDimensions / 2}px`;
-      this.rightConElement.style.top = `${screenHeight / 2 - bodyDimensions / 2}px`;
-    } else {
-      this.leftConElement.style.left = `${screenWidth / 2 - bodyDimensions / 2}px`;
-      this.leftConElement.style.top = `${bodyDimensions}px`;
-
-      this.bodyElement.style.top = `0`;
-
-      this.rightConElement.style.left = `${screenWidth / 2}px`;
-      this.rightConElement.style.top = `${bodyDimensions}px`;
-    }
-
-    const screenDimensions = Math.floor(bodyDimensions * 0.89); // 256 / 288
-    this.screenElement.width = screenDimensions;
-    this.screenElement.height = screenDimensions;
-    this.screenElement.style.left = `${parseInt(this.bodyElement.style.left, 10) + ((bodyDimensions - screenDimensions) / 2)}px`;
-    this.screenElement.style.top = `${parseInt(this.bodyElement.style.top, 10) + ((bodyDimensions - screenDimensions) / 2)}px`;
+    this.rightConElement.style.left = `${rightConLeft}px`;
+    this.rightConElement.style.top = `${rightConTop}px`;
+    this.rightConElement.style.width = `${conWidth}px`;
+    this.rightConElement.style.height = `${conHeight}px`;
   }
 }
