@@ -1,1 +1,1 @@
-import '../examples/drawRect';
+import '../examples/console';
