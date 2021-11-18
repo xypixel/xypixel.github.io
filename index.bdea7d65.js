@@ -460,10 +460,15 @@ function hmrAcceptRun(bundle, id) {
 
 },{}],"7PGg5":[function(require,module,exports) {
 var _console = require("../examples/console");
+function init() {
+    document.addEventListener('contextmenu', (e)=>e.preventDefault()
+    );
+}
+init();
 
 },{"../examples/console":"grIHO"}],"grIHO":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-var _canvas = require("~src/Canvas");
+var _canvas = require("../src/Canvas");
 var _canvasDefault = parcelHelpers.interopDefault(_canvas);
 var _console = require("../src/Console");
 var _consoleDefault = parcelHelpers.interopDefault(_console);
@@ -472,56 +477,7 @@ new _consoleDefault.default({
     canvas
 });
 
-},{"~src/Canvas":"fmWip","../src/Console":"g5VmO","@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV"}],"fmWip":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "default", ()=>Canvas
-);
-class Canvas {
-    constructor(){
-        this.dimensions = 256;
-        this.pixelScale = 1;
-        this.antiAliasingScaleThreshold = 4;
-        this.element = document.querySelector('#screen');
-        this.context = this.element.getContext('2d');
-    }
-    setPixelScale(calculatedScreenDimensions) {
-        const scale = calculatedScreenDimensions / this.dimensions;
-        this.pixelScale = scale > this.antiAliasingScaleThreshold ? Math.floor(scale) : scale;
-    }
-}
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV"}],"ciiiV":[function(require,module,exports) {
-exports.interopDefault = function(a) {
-    return a && a.__esModule ? a : {
-        default: a
-    };
-};
-exports.defineInteropFlag = function(a) {
-    Object.defineProperty(a, '__esModule', {
-        value: true
-    });
-};
-exports.exportAll = function(source, dest) {
-    Object.keys(source).forEach(function(key) {
-        if (key === 'default' || key === '__esModule' || dest.hasOwnProperty(key)) return;
-        Object.defineProperty(dest, key, {
-            enumerable: true,
-            get: function() {
-                return source[key];
-            }
-        });
-    });
-    return dest;
-};
-exports.export = function(dest, destName, get) {
-    Object.defineProperty(dest, destName, {
-        enumerable: true,
-        get: get
-    });
-};
-
-},{}],"g5VmO":[function(require,module,exports) {
+},{"../src/Console":"g5VmO","@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV","../src/Canvas":"7uNTJ"}],"g5VmO":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "default", ()=>Console
@@ -592,6 +548,55 @@ class Console {
         this.actionBtnIIElement.style.top = `${actionBtnCenterY - actionBtnDimensions}px`;
         this.actionBtnIIElement.style.width = `${actionBtnDimensions}px`;
         this.actionBtnIIElement.style.height = `${actionBtnDimensions}px`;
+    }
+}
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV"}],"ciiiV":[function(require,module,exports) {
+exports.interopDefault = function(a) {
+    return a && a.__esModule ? a : {
+        default: a
+    };
+};
+exports.defineInteropFlag = function(a) {
+    Object.defineProperty(a, '__esModule', {
+        value: true
+    });
+};
+exports.exportAll = function(source, dest) {
+    Object.keys(source).forEach(function(key) {
+        if (key === 'default' || key === '__esModule' || dest.hasOwnProperty(key)) return;
+        Object.defineProperty(dest, key, {
+            enumerable: true,
+            get: function() {
+                return source[key];
+            }
+        });
+    });
+    return dest;
+};
+exports.export = function(dest, destName, get) {
+    Object.defineProperty(dest, destName, {
+        enumerable: true,
+        get: get
+    });
+};
+
+},{}],"7uNTJ":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "default", ()=>Canvas
+);
+class Canvas {
+    constructor(){
+        this.dimensions = 256;
+        this.pixelScale = 1;
+        this.antiAliasingScaleThreshold = 4;
+        this.element = document.querySelector('#screen');
+        this.context = this.element.getContext('2d');
+    }
+    setPixelScale(calculatedScreenDimensions) {
+        const scale = calculatedScreenDimensions / this.dimensions;
+        this.pixelScale = scale > this.antiAliasingScaleThreshold ? Math.floor(scale) : scale;
     }
 }
 
