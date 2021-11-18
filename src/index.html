@@ -6,26 +6,38 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     html {
-      background-color: #333;
+      background-color: #111;
     }
     body {
       margin: 0;
     }
-    .console {
-      background-color: #666;
+    .console, .button {
       position: absolute;
     }
     canvas {
-      background-color: #aaa;
+      background-color: #000;
       position: absolute;
     }
   </style>
   <title></title>
 </head>
 <body>
-  <div class="console" id="leftCon"></div>
+  <div class="console" id="leftCon">
+    <img src="assets/svg/left-con.svg" />
+  </div>
+  <div class="button" id="dpad">
+    <img src="assets/svg/dpad.svg" />
+  </div>
   <canvas class="console" id="screen"></canvas>
-  <div class="console" id="rightCon"></div>
+  <div class="console" id="rightCon">
+    <img src="assets/svg/right-con.svg" />
+  </div>
+  <div class="button" id="I">
+    <img src="assets/svg/action-btn.svg" />
+  </div>
+  <div class="button" id="II">
+    <img src="assets/svg/action-btn.svg" />
+  </div>
   <script type="module" src="index.ts"></script>
 </body>
 </html>

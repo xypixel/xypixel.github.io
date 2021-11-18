@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 576 288" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g id="Right-Con" serif:id="Right Con" transform="matrix(1,0,0,1,-64,-16)">
+        <g id="body" transform="matrix(1.7561,0,0,2.44068,-262.634,13.5593)">
+            <path d="M514,1L432,1L432,119L483.25,119L514,103.431L514,1Z" style="fill:rgb(51,51,51);"/>
+        </g>
+        <g transform="matrix(1,0,0,1,118,-22)">
+            <circle cx="477" cy="163" r="19" style="fill:rgb(34,34,34);"/>
+        </g>
+        <g transform="matrix(1,0,0,1,64,16)">
+            <circle cx="477" cy="163" r="19" style="fill:rgb(34,34,34);"/>
+            <path d="M477,144C487.486,144 496,152.514 496,163C496,173.486 487.486,182 477,182C466.514,182 458,173.486 458,163C458,152.514 466.514,144 477,144ZM477,147C485.831,147 493,154.169 493,163C493,171.831 485.831,179 477,179C468.169,179 461,171.831 461,163C461,154.169 468.169,147 477,147Z"/>
+        </g>
+    </g>
+    <g transform="matrix(0.321429,0,0,0.321429,-41.1429,-185.143)">
+        <g id="Screen">
+            <rect x="576" y="576" width="896" height="896"/>
+        </g>
+    </g>
+    <g id="Left-Con" serif:id="Left Con" transform="matrix(1,0,0,1,-496,-16)">
+        <g id="body1" serif:id="body" transform="matrix(-1.7561,0,0,2.44068,1398.63,13.5593)">
+            <path d="M514,1L432,1L432,119L483.25,119L514,103.431L514,1Z" style="fill:rgb(51,51,51);"/>
+        </g>
+        <g transform="matrix(1,0,0,1,496,16)">
+            <rect x="58" y="130" width="28" height="28" style="fill:rgb(34,34,34);"/>
+        </g>
+        <g transform="matrix(1,0,0,1,496,16)">
+            <rect x="86" y="130" width="32" height="28" style="fill:rgb(34,34,34);"/>
+        </g>
+        <g transform="matrix(1,0,0,1,436,16)">
+            <rect x="86" y="130" width="32" height="28" style="fill:rgb(34,34,34);"/>
+        </g>
+        <g transform="matrix(-1.83697e-16,1,-1,-1.83697e-16,712,88)">
+            <rect x="86" y="130" width="32" height="28" style="fill:rgb(34,34,34);"/>
+        </g>
+        <g transform="matrix(-1.83697e-16,1,-1,-1.83697e-16,712,28)">
+            <rect x="86" y="130" width="32" height="28" style="fill:rgb(34,34,34);"/>
+        </g>
+        <g transform="matrix(0.75,0,0,1.09454,524.75,2.61502)">
+            <path d="M119,131L76.333,131L76.333,131.914L115,131.914L115,155.668L76.333,155.668L76.333,156.581L119,156.581L119,131Z" style="fill:rgb(34,34,34);"/>
+            <path d="M119,131L76.333,131L76.333,131.914L115,131.914L115,155.668L76.333,155.668L76.333,156.581L119,156.581L119,131Z"/>
+        </g>
+        <g transform="matrix(-0.75,0,0,1.09454,611.25,2.61502)">
+            <path d="M119,131L76.333,131L76.333,131.914L115,131.914L115,155.668L76.333,155.668L76.333,156.581L119,156.581L119,131Z" style="fill:rgb(34,34,34);"/>
+            <path d="M119,131L76.333,131L76.333,131.914L115,131.914L115,155.668L76.333,155.668L76.333,156.581L119,156.581L119,131Z"/>
+        </g>
+        <g transform="matrix(-1.37773e-16,0.75,-1.09454,-2.01064e-16,725.385,116.75)">
+            <path d="M119,131L76.333,131L76.333,131.914L115,131.914L115,155.668L76.333,155.668L76.333,156.581L119,156.581L119,131Z" style="fill:rgb(34,34,34);"/>
+            <path d="M119,131L76.333,131L76.333,131.914L115,131.914L115,155.668L76.333,155.668L76.333,156.581L119,156.581L119,131Z"/>
+        </g>
+        <g transform="matrix(1.37773e-16,-0.75,-1.09454,-2.01064e-16,725.385,203.25)">
+            <path d="M119,131L76.333,131L76.333,131.914L115,131.914L115,155.668L76.333,155.668L76.333,156.581L119,156.581L119,131Z" style="fill:rgb(34,34,34);"/>
+            <path d="M119,131L76.333,131L76.333,131.914L115,131.914L115,155.668L76.333,155.668L76.333,156.581L119,156.581L119,131Z"/>
+        </g>
+    </g>
+</svg>
