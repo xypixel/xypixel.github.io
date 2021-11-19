@@ -476,7 +476,7 @@ new _consoleDefault.default({
     screen
 });
 
-},{"../src/Console":"g5VmO","@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV","../src/Screen":"bhXCB","~src/Buttons":"iI12F"}],"g5VmO":[function(require,module,exports) {
+},{"../src/Console":"g5VmO","@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV","~src/Buttons":"iI12F","../src/Screen":"bhXCB"}],"g5VmO":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "default", ()=>Console
@@ -602,28 +602,7 @@ exports.export = function(dest, destName, get) {
     });
 };
 
-},{}],"bhXCB":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "default", ()=>Screen
-);
-class Screen {
-    constructor(){
-        this.dimensions = 256;
-        this.pixelScale = 1;
-        this.antiAliasingScaleThreshold = 4;
-        this.element = document.querySelector('#screen');
-        this.context = this.element.getContext('2d');
-        this.context.imageSmoothingEnabled = false;
-        this.context.imageSmoothingQuality = 'low';
-    }
-    setPixelScale(calculatedScreenDimensions) {
-        const scale = calculatedScreenDimensions / this.dimensions;
-        this.pixelScale = scale > this.antiAliasingScaleThreshold ? Math.floor(scale) : scale;
-    }
-}
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV"}],"iI12F":[function(require,module,exports) {
+},{}],"iI12F":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "default", ()=>Buttons
@@ -757,7 +736,16 @@ class Buttons {
     }
 }
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV","./geometry":"jj3iP","./collision":"kGheF"}],"jj3iP":[function(require,module,exports) {
+},{"./collision":"kGheF","./geometry":"jj3iP","@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV"}],"kGheF":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "hitCheckPointRect", ()=>hitCheckPointRect
+);
+function hitCheckPointRect(point, rect) {
+    return point.x > rect.x && point.x < rect.right && point.y > rect.y && point.y < rect.bottom;
+}
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV"}],"jj3iP":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "Point", ()=>Point
@@ -791,13 +779,25 @@ class Rect {
     }
 }
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV"}],"kGheF":[function(require,module,exports) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV"}],"bhXCB":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "hitCheckPointRect", ()=>hitCheckPointRect
+parcelHelpers.export(exports, "default", ()=>Screen
 );
-function hitCheckPointRect(point, rect) {
-    return point.x > rect.x && point.x < rect.right && point.y > rect.y && point.y < rect.bottom;
+class Screen {
+    constructor(){
+        this.dimensions = 256;
+        this.pixelScale = 1;
+        this.antiAliasingScaleThreshold = 4;
+        this.element = document.querySelector('#screen');
+        this.context = this.element.getContext('2d');
+        this.context.imageSmoothingEnabled = false;
+        this.context.imageSmoothingQuality = 'low';
+    }
+    setPixelScale(calculatedScreenDimensions) {
+        const scale = calculatedScreenDimensions / this.dimensions;
+        this.pixelScale = scale > this.antiAliasingScaleThreshold ? Math.floor(scale) : scale;
+    }
 }
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV"}]},["2HtCd","7PGg5"], "7PGg5", "parcelRequire4f57")
