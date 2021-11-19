@@ -460,24 +460,23 @@ function hmrAcceptRun(bundle, id) {
 
 },{}],"7PGg5":[function(require,module,exports) {
 var _console = require("../examples/console");
-function init() {
-    document.addEventListener('contextmenu', (e)=>e.preventDefault()
-    );
-}
-init();
 
 },{"../examples/console":"grIHO"}],"grIHO":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-var _canvas = require("../src/Canvas");
-var _canvasDefault = parcelHelpers.interopDefault(_canvas);
+var _buttons = require("~src/Buttons");
+var _buttonsDefault = parcelHelpers.interopDefault(_buttons);
 var _console = require("../src/Console");
 var _consoleDefault = parcelHelpers.interopDefault(_console);
-const canvas = new _canvasDefault.default();
+var _screen = require("../src/Screen");
+var _screenDefault = parcelHelpers.interopDefault(_screen);
+const buttons = new _buttonsDefault.default();
+const screen = new _screenDefault.default();
 new _consoleDefault.default({
-    canvas
+    buttons,
+    screen
 });
 
-},{"../src/Console":"g5VmO","@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV","../src/Canvas":"7uNTJ"}],"g5VmO":[function(require,module,exports) {
+},{"../src/Console":"g5VmO","@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV","../src/Screen":"bhXCB","~src/Buttons":"iI12F"}],"g5VmO":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "default", ()=>Console
@@ -485,12 +484,12 @@ parcelHelpers.export(exports, "default", ()=>Console
 class Console {
     constructor(params){
         this.calculatedScreenDimensions = 256;
-        this.canvas = params.canvas;
+        this.screen = params.screen;
+        this.buttons = params.buttons;
         this.leftConElement = document.querySelector('#leftCon');
         this.rightConElement = document.querySelector('#rightCon');
-        this.dpadElement = document.querySelector('#dpad');
-        this.actionBtnIElement = document.querySelector('#I');
-        this.actionBtnIIElement = document.querySelector('#II');
+        document.addEventListener('contextmenu', (e)=>e.preventDefault()
+        );
         this.calculatePositionAndScale();
         window.addEventListener('resize', ()=>{
             this.calculatePositionAndScale();
@@ -504,10 +503,10 @@ class Console {
         const viewportHeight = window.innerHeight;
         const viewportIsLandscape = viewportWidth > viewportHeight;
         this.calculatedScreenDimensions = Math.floor(viewportIsLandscape ? viewportWidth / viewportHeight < 2 ? viewportWidth / 2 : viewportHeight : viewportHeight / viewportWidth < 2 ? viewportHeight / 2 : viewportWidth);
-        this.canvas.setPixelScale(this.calculatedScreenDimensions);
-        if (this.calculatedScreenDimensions / this.canvas.dimensions > this.canvas.pixelScale) this.calculatedScreenDimensions = this.canvas.dimensions * this.canvas.pixelScale;
-        this.canvas.element.width = this.calculatedScreenDimensions;
-        this.canvas.element.height = this.calculatedScreenDimensions;
+        this.screen.setPixelScale(this.calculatedScreenDimensions);
+        if (this.calculatedScreenDimensions / this.screen.dimensions > this.screen.pixelScale) this.calculatedScreenDimensions = this.screen.dimensions * this.screen.pixelScale;
+        this.screen.element.width = this.calculatedScreenDimensions;
+        this.screen.element.height = this.calculatedScreenDimensions;
         this.positionAndScaleElements(viewportWidth, viewportHeight, viewportIsLandscape);
     }
     positionAndScaleElements(viewportWidth, viewportHeight, viewportIsLandscape) {
@@ -519,15 +518,44 @@ class Console {
         const rightConTop = viewportIsLandscape ? screenTop : screenTop + this.calculatedScreenDimensions;
         const conWidth = this.calculatedScreenDimensions / 2;
         const conHeight = this.calculatedScreenDimensions;
-        const dpadDimensions = conWidth / 1.6;
-        const dpadLeft = leftConLeft + conWidth / 2 - dpadDimensions / 2;
-        const dpadTop = leftConTop + conHeight / 2 - dpadDimensions / 2;
+        const dPadDimensions = conWidth / 1.6;
+        const dPadIndividualButtonDimensions = dPadDimensions / 3;
+        const dPadLeft = leftConLeft + conWidth / 2 - dPadDimensions / 2;
+        const dPadTop = leftConTop + conHeight / 2 - dPadDimensions / 2;
+        (()=>{
+            let x = 0;
+            let y = 0;
+            this.buttons.dPadButtons.forEach((item)=>{
+                item.element.style.left = `${x * dPadIndividualButtonDimensions}px`;
+                item.element.style.top = `${y * dPadIndividualButtonDimensions}px`;
+                item.element.style.width = `${dPadIndividualButtonDimensions}px`;
+                item.element.style.height = `${dPadIndividualButtonDimensions}px`;
+                y = x === 2 ? y + 1 : y;
+                x = x !== 2 ? x + 1 : 0;
+            });
+        })();
         const actionBtnDimensions = conWidth / 3.6;
         const actionBtnSpacing = conWidth / 9;
         const actionBtnCenterX = rightConLeft + conWidth / 2;
         const actionBtnCenterY = rightConTop + conHeight / 2;
-        this.canvas.element.style.left = `${screenLeft}px`;
-        this.canvas.element.style.top = `${screenTop}px`;
+        this.screen.element.style.left = `${screenLeft}px`;
+        this.screen.element.style.top = `${screenTop}px`;
+        this.buttons.dPadElement.style.left = `${dPadLeft}px`;
+        this.buttons.dPadElement.style.top = `${dPadTop}px`;
+        this.buttons.dPadElement.style.width = `${dPadDimensions}px`;
+        this.buttons.dPadElement.style.height = `${dPadDimensions}px`;
+        this.buttons.dPadElement.style.left = `${dPadLeft}px`;
+        this.buttons.dPadElement.style.top = `${dPadTop}px`;
+        this.buttons.dPadElement.style.width = `${dPadDimensions}px`;
+        this.buttons.dPadElement.style.height = `${dPadDimensions}px`;
+        this.buttons.actionBtnIElement.style.left = `${actionBtnCenterX - actionBtnSpacing / 2 - actionBtnDimensions}px`;
+        this.buttons.actionBtnIElement.style.top = `${actionBtnCenterY}px`;
+        this.buttons.actionBtnIElement.style.width = `${actionBtnDimensions}px`;
+        this.buttons.actionBtnIElement.style.height = `${actionBtnDimensions}px`;
+        this.buttons.actionBtnIIElement.style.left = `${actionBtnCenterX + actionBtnSpacing / 2}px`;
+        this.buttons.actionBtnIIElement.style.top = `${actionBtnCenterY - actionBtnDimensions}px`;
+        this.buttons.actionBtnIIElement.style.width = `${actionBtnDimensions}px`;
+        this.buttons.actionBtnIIElement.style.height = `${actionBtnDimensions}px`;
         this.leftConElement.style.left = `${leftConLeft}px`;
         this.leftConElement.style.top = `${leftConTop}px`;
         this.leftConElement.style.width = `${conWidth}px`;
@@ -536,18 +564,6 @@ class Console {
         this.rightConElement.style.top = `${rightConTop}px`;
         this.rightConElement.style.width = `${conWidth}px`;
         this.rightConElement.style.height = `${conHeight}px`;
-        this.dpadElement.style.left = `${dpadLeft}px`;
-        this.dpadElement.style.top = `${dpadTop}px`;
-        this.dpadElement.style.width = `${dpadDimensions}px`;
-        this.dpadElement.style.height = `${dpadDimensions}px`;
-        this.actionBtnIElement.style.left = `${actionBtnCenterX - actionBtnSpacing / 2 - actionBtnDimensions}px`;
-        this.actionBtnIElement.style.top = `${actionBtnCenterY}px`;
-        this.actionBtnIElement.style.width = `${actionBtnDimensions}px`;
-        this.actionBtnIElement.style.height = `${actionBtnDimensions}px`;
-        this.actionBtnIIElement.style.left = `${actionBtnCenterX + actionBtnSpacing / 2}px`;
-        this.actionBtnIIElement.style.top = `${actionBtnCenterY - actionBtnDimensions}px`;
-        this.actionBtnIIElement.style.width = `${actionBtnDimensions}px`;
-        this.actionBtnIIElement.style.height = `${actionBtnDimensions}px`;
     }
 }
 
@@ -581,22 +597,205 @@ exports.export = function(dest, destName, get) {
     });
 };
 
-},{}],"7uNTJ":[function(require,module,exports) {
+},{}],"bhXCB":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "default", ()=>Canvas
+parcelHelpers.export(exports, "default", ()=>Screen
 );
-class Canvas {
+class Screen {
     constructor(){
         this.dimensions = 256;
         this.pixelScale = 1;
         this.antiAliasingScaleThreshold = 4;
         this.element = document.querySelector('#screen');
         this.context = this.element.getContext('2d');
+        this.context.imageSmoothingEnabled = false;
+        this.context.imageSmoothingQuality = 'low';
     }
     setPixelScale(calculatedScreenDimensions) {
         const scale = calculatedScreenDimensions / this.dimensions;
         this.pixelScale = scale > this.antiAliasingScaleThreshold ? Math.floor(scale) : scale;
+    }
+}
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV"}],"iI12F":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "default", ()=>Buttons
+);
+var _collision = require("./collision");
+var _geometry = require("./geometry");
+var DPadButtons1;
+(function(DPadButtons) {
+    DPadButtons["Up"] = "Up";
+    DPadButtons["Lt"] = "Lt";
+    DPadButtons["Dn"] = "Dn";
+    DPadButtons["Rt"] = "Rt";
+    DPadButtons["Center"] = "Center";
+    DPadButtons["LtUp"] = "LtUp";
+    DPadButtons["LtDn"] = "LtDn";
+    DPadButtons["RtUp"] = "RtUp";
+    DPadButtons["RtDn"] = "RtDn";
+})(DPadButtons1 || (DPadButtons1 = {
+}));
+class Buttons {
+    constructor(){
+        this.dPadButtons = [
+            {
+                name: DPadButtons1.LtUp,
+                isPressed: false,
+                element: null
+            },
+            {
+                name: DPadButtons1.Up,
+                isPressed: false,
+                element: null
+            },
+            {
+                name: DPadButtons1.RtUp,
+                isPressed: false,
+                element: null
+            },
+            {
+                name: DPadButtons1.Lt,
+                isPressed: false,
+                element: null
+            },
+            {
+                name: DPadButtons1.Center,
+                isPressed: false,
+                element: null
+            },
+            {
+                name: DPadButtons1.Rt,
+                isPressed: false,
+                element: null
+            },
+            {
+                name: DPadButtons1.LtDn,
+                isPressed: false,
+                element: null
+            },
+            {
+                name: DPadButtons1.Dn,
+                isPressed: false,
+                element: null
+            },
+            {
+                name: DPadButtons1.RtDn,
+                isPressed: false,
+                element: null
+            }
+        ];
+        this.dPadElement = document.querySelector('#dPad');
+        this.dPadButtons.forEach((item)=>{
+            item.element = document.querySelector(`#${item.name}`);
+        });
+        this.actionBtnIElement = document.querySelector('#actionBtnI');
+        this.actionBtnIIElement = document.querySelector('#actionBtnII');
+        this.dPadElement.addEventListener('touchstart', (event)=>{
+            this.setActiveDPadElements(this.dPadButtons.find((item)=>item.name === event.target.id
+            ));
+        }, false);
+        this.dPadElement.addEventListener('touchmove', (event)=>{
+            event.preventDefault();
+            this.dPadButtons.forEach((item)=>{
+                item.element?.classList.remove('active');
+            });
+            const firstTouch = event.touches[0];
+            this.dPadButtons.forEach((item)=>{
+                if (_collision.checkPointRect(new _geometry.Point(firstTouch.pageX, firstTouch.pageY), item.element.getBoundingClientRect())) this.setActiveDPadElements(item);
+            });
+        }, false);
+        this.dPadElement.addEventListener('touchend', (event)=>{
+            this.dPadButtons.forEach((item)=>{
+                item.element?.classList.remove('active');
+            });
+        }, false);
+        this.actionBtnIElement.addEventListener('touchstart', (event)=>{
+            event.target.classList.add('active');
+        }, false);
+        this.actionBtnIElement.addEventListener('touchmove', (event)=>{
+            event.preventDefault();
+        }, false);
+        this.actionBtnIElement.addEventListener('touchend', (event)=>{
+            event.target.classList.remove('active');
+        }, false);
+        this.actionBtnIIElement.addEventListener('touchstart', (event)=>{
+            event.target.classList.add('active');
+        }, false);
+        this.actionBtnIIElement.addEventListener('touchmove', (event)=>{
+            event.preventDefault();
+        }, false);
+        this.actionBtnIIElement.addEventListener('touchend', (event)=>{
+            event.target.classList.remove('active');
+        }, false);
+    }
+    setActiveDPadElements(item1) {
+        if (item1.name === DPadButtons1.LtUp) {
+            this.dPadButtons.find((item)=>item.name === DPadButtons1.Lt
+            )?.element?.classList.add('active');
+            this.dPadButtons.find((item)=>item.name === DPadButtons1.Up
+            )?.element?.classList.add('active');
+        } else if (item1.name === DPadButtons1.RtUp) {
+            this.dPadButtons.find((item)=>item.name === DPadButtons1.Rt
+            )?.element?.classList.add('active');
+            this.dPadButtons.find((item)=>item.name === DPadButtons1.Up
+            )?.element?.classList.add('active');
+        } else if (item1.name === DPadButtons1.LtDn) {
+            this.dPadButtons.find((item)=>item.name === DPadButtons1.Lt
+            )?.element?.classList.add('active');
+            this.dPadButtons.find((item)=>item.name === DPadButtons1.Dn
+            )?.element?.classList.add('active');
+        } else if (item1.name === DPadButtons1.RtDn) {
+            this.dPadButtons.find((item)=>item.name === DPadButtons1.Rt
+            )?.element?.classList.add('active');
+            this.dPadButtons.find((item)=>item.name === DPadButtons1.Dn
+            )?.element?.classList.add('active');
+        } else item1.element?.classList.add('active');
+    }
+}
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV","./collision":"kGheF","./geometry":"jj3iP"}],"kGheF":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "checkPointRect", ()=>checkPointRect
+);
+function checkPointRect(point, rect) {
+    return point.x > rect.x && point.x < rect.right && point.y > rect.y && point.y < rect.bottom;
+}
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV"}],"jj3iP":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "Point", ()=>Point
+);
+parcelHelpers.export(exports, "Rect", ()=>Rect
+);
+class Point {
+    constructor(x, y){
+        this.x = x;
+        this.y = y;
+    }
+}
+class Rect {
+    constructor(x1, y1, width, height){
+        this.x = x1;
+        this.y = y1;
+        this.width = width;
+        this.height = height;
+    }
+    get bottom() {
+        return this.y + this.height;
+    }
+    get left() {
+        return this.x;
+    }
+    get right() {
+        return this.x + this.width;
+    }
+    get top() {
+        return this.y;
     }
 }
 
