@@ -518,7 +518,7 @@ class Console {
         const rightConTop = viewportIsLandscape ? screenTop : screenTop + this.calculatedScreenDimensions;
         const conWidth = this.calculatedScreenDimensions / 2;
         const conHeight = this.calculatedScreenDimensions;
-        const dPadDimensions = conWidth / 1.6;
+        const dPadDimensions = conWidth / 1.5;
         const dPadIndividualButtonDimensions = dPadDimensions / 3;
         const dPadLeft = leftConLeft + conWidth / 2 - dPadDimensions / 2;
         const dPadTop = leftConTop + conHeight / 2 - dPadDimensions / 2;
@@ -534,8 +534,9 @@ class Console {
                 x = x !== 2 ? x + 1 : 0;
             });
         })();
-        const actionBtnDimensions = conWidth / 3.6;
-        const actionBtnSpacing = conWidth / 9;
+        const actionBtnsWidth = conWidth / 1.5;
+        const actionBtnsHeight = actionBtnsWidth / 1.2;
+        const actionBtnDimensions = conWidth / 3.5;
         const actionBtnCenterX = rightConLeft + conWidth / 2;
         const actionBtnCenterY = rightConTop + conHeight / 2;
         this.screen.element.style.left = `${screenLeft}px`;
@@ -548,12 +549,16 @@ class Console {
         this.buttons.dPadElement.style.top = `${dPadTop}px`;
         this.buttons.dPadElement.style.width = `${dPadDimensions}px`;
         this.buttons.dPadElement.style.height = `${dPadDimensions}px`;
-        this.buttons.actionBtnIElement.style.left = `${actionBtnCenterX - actionBtnSpacing / 2 - actionBtnDimensions}px`;
-        this.buttons.actionBtnIElement.style.top = `${actionBtnCenterY}px`;
+        this.buttons.actionBtnsElement.style.left = `${actionBtnCenterX - actionBtnsWidth / 2}px`;
+        this.buttons.actionBtnsElement.style.top = `${actionBtnCenterY - actionBtnsHeight / 2}px`;
+        this.buttons.actionBtnsElement.style.width = `${actionBtnsWidth}px`;
+        this.buttons.actionBtnsElement.style.height = `${actionBtnsHeight}px`;
+        this.buttons.actionBtnIElement.style.left = `0`;
+        this.buttons.actionBtnIElement.style.top = `${actionBtnsHeight - actionBtnDimensions}px`;
         this.buttons.actionBtnIElement.style.width = `${actionBtnDimensions}px`;
         this.buttons.actionBtnIElement.style.height = `${actionBtnDimensions}px`;
-        this.buttons.actionBtnIIElement.style.left = `${actionBtnCenterX + actionBtnSpacing / 2}px`;
-        this.buttons.actionBtnIIElement.style.top = `${actionBtnCenterY - actionBtnDimensions}px`;
+        this.buttons.actionBtnIIElement.style.left = `${actionBtnsWidth - actionBtnDimensions}px`;
+        this.buttons.actionBtnIIElement.style.top = `0`;
         this.buttons.actionBtnIIElement.style.width = `${actionBtnDimensions}px`;
         this.buttons.actionBtnIIElement.style.height = `${actionBtnDimensions}px`;
         this.leftConElement.style.left = `${leftConLeft}px`;
@@ -643,54 +648,54 @@ class Buttons {
         this.dPadButtons = [
             {
                 name: DPadButtons1.LtUp,
-                isPressed: false,
                 element: null
             },
             {
                 name: DPadButtons1.Up,
-                isPressed: false,
                 element: null
             },
             {
                 name: DPadButtons1.RtUp,
-                isPressed: false,
                 element: null
             },
             {
                 name: DPadButtons1.Lt,
-                isPressed: false,
                 element: null
             },
             {
                 name: DPadButtons1.Center,
-                isPressed: false,
                 element: null
             },
             {
                 name: DPadButtons1.Rt,
-                isPressed: false,
                 element: null
             },
             {
                 name: DPadButtons1.LtDn,
-                isPressed: false,
                 element: null
             },
             {
                 name: DPadButtons1.Dn,
-                isPressed: false,
                 element: null
             },
             {
                 name: DPadButtons1.RtDn,
-                isPressed: false,
                 element: null
             }
         ];
+        this.isLtUpPressed = false;
+        this.isUpPressed = false;
+        this.isRtUpPressed = false;
+        this.isLtPressed = false;
+        this.isRtPressed = false;
+        this.isLtDnPressed = false;
+        this.isDnPressed = false;
+        this.isRtDnPressed = false;
         this.dPadElement = document.querySelector('#dPad');
         this.dPadButtons.forEach((item)=>{
             item.element = document.querySelector(`#${item.name}`);
         });
+        this.actionBtnsElement = document.querySelector('#actionBtns');
         this.actionBtnIElement = document.querySelector('#actionBtnI');
         this.actionBtnIIElement = document.querySelector('#actionBtnII');
         this.dPadElement.addEventListener('touchstart', (event)=>{
@@ -704,7 +709,7 @@ class Buttons {
             });
             const firstTouch = event.touches[0];
             this.dPadButtons.forEach((item)=>{
-                if (_collision.checkPointRect(new _geometry.Point(firstTouch.pageX, firstTouch.pageY), item.element.getBoundingClientRect())) this.setActiveDPadElements(item);
+                if (_collision.hitCheckPointRect(new _geometry.Point(firstTouch.pageX, firstTouch.pageY), item.element.getBoundingClientRect())) this.setActiveDPadElements(item);
             });
         }, false);
         this.dPadElement.addEventListener('touchend', (event)=>{
@@ -712,22 +717,18 @@ class Buttons {
                 item.element?.classList.remove('active');
             });
         }, false);
-        this.actionBtnIElement.addEventListener('touchstart', (event)=>{
+        this.actionBtnsElement.addEventListener('touchstart', (event)=>{
             event.target.classList.add('active');
         }, false);
-        this.actionBtnIElement.addEventListener('touchmove', (event)=>{
+        this.actionBtnsElement.addEventListener('touchmove', (event)=>{
             event.preventDefault();
+            const firstTouch = event.touches[0];
+            this.actionBtnIElement.classList.remove('active');
+            this.actionBtnIIElement.classList.remove('active');
+            if (_collision.hitCheckPointRect(new _geometry.Point(firstTouch.pageX, firstTouch.pageY), this.actionBtnIElement.getBoundingClientRect())) this.actionBtnIElement.classList.add('active');
+            else if (_collision.hitCheckPointRect(new _geometry.Point(firstTouch.pageX, firstTouch.pageY), this.actionBtnIIElement.getBoundingClientRect())) this.actionBtnIIElement.classList.add('active');
         }, false);
-        this.actionBtnIElement.addEventListener('touchend', (event)=>{
-            event.target.classList.remove('active');
-        }, false);
-        this.actionBtnIIElement.addEventListener('touchstart', (event)=>{
-            event.target.classList.add('active');
-        }, false);
-        this.actionBtnIIElement.addEventListener('touchmove', (event)=>{
-            event.preventDefault();
-        }, false);
-        this.actionBtnIIElement.addEventListener('touchend', (event)=>{
+        this.actionBtnsElement.addEventListener('touchend', (event)=>{
             event.target.classList.remove('active');
         }, false);
     }
@@ -756,16 +757,7 @@ class Buttons {
     }
 }
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV","./collision":"kGheF","./geometry":"jj3iP"}],"kGheF":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "checkPointRect", ()=>checkPointRect
-);
-function checkPointRect(point, rect) {
-    return point.x > rect.x && point.x < rect.right && point.y > rect.y && point.y < rect.bottom;
-}
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV"}],"jj3iP":[function(require,module,exports) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV","./geometry":"jj3iP","./collision":"kGheF"}],"jj3iP":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "Point", ()=>Point
@@ -797,6 +789,15 @@ class Rect {
     get top() {
         return this.y;
     }
+}
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV"}],"kGheF":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "hitCheckPointRect", ()=>hitCheckPointRect
+);
+function hitCheckPointRect(point, rect) {
+    return point.x > rect.x && point.x < rect.right && point.y > rect.y && point.y < rect.bottom;
 }
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV"}]},["2HtCd","7PGg5"], "7PGg5", "parcelRequire4f57")
