@@ -498,7 +498,6 @@ class Console {
             config: this.config
         });
         this.screen = new _screenDefault.default();
-        this.containerElement = document.querySelector('#xypixel');
         this.leftConElement = document.querySelector('#leftCon');
         this.rightConElement = document.querySelector('#rightCon');
         const handleInitialInteraction = (event)=>{
@@ -746,7 +745,7 @@ class Buttons {
             ));
         }, false);
         this.dPadElement.addEventListener('touchmove', (event)=>{
-            if (this.config.dev.allowTouchPreventDefault) event.preventDefault();
+            this.config.dev.allowTouchPreventDefault;
             this.dPadButtons.forEach((item)=>{
                 item.element?.classList.remove('active');
             });
@@ -764,7 +763,7 @@ class Buttons {
             event.target.classList.add('active');
         }, false);
         this.actionBtnsElement.addEventListener('touchmove', (event)=>{
-            if (this.config.dev.allowTouchPreventDefault) event.preventDefault();
+            this.config.dev.allowTouchPreventDefault;
             const firstTouch = event.touches[0];
             this.actionBtnIElement.classList.remove('active');
             this.actionBtnIIElement.classList.remove('active');
