@@ -745,7 +745,7 @@ class Buttons {
             ));
         }, false);
         this.dPadElement.addEventListener('touchmove', (event)=>{
-            this.config.dev.allowTouchPreventDefault;
+            if (this.config.dev.allowTouchPreventDefault) event.preventDefault();
             this.dPadButtons.forEach((item)=>{
                 item.element?.classList.remove('active');
             });
@@ -763,7 +763,7 @@ class Buttons {
             event.target.classList.add('active');
         }, false);
         this.actionBtnsElement.addEventListener('touchmove', (event)=>{
-            this.config.dev.allowTouchPreventDefault;
+            if (this.config.dev.allowTouchPreventDefault) event.preventDefault();
             const firstTouch = event.touches[0];
             this.actionBtnIElement.classList.remove('active');
             this.actionBtnIIElement.classList.remove('active');
