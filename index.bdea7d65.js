@@ -463,33 +463,57 @@ var _console = require("../examples/console");
 
 },{"../examples/console":"grIHO"}],"grIHO":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-var _buttons = require("~src/Buttons");
-var _buttonsDefault = parcelHelpers.interopDefault(_buttons);
+var _config = require("~src/Config");
+var _configDefault = parcelHelpers.interopDefault(_config);
 var _console = require("../src/Console");
 var _consoleDefault = parcelHelpers.interopDefault(_console);
-var _screen = require("../src/Screen");
-var _screenDefault = parcelHelpers.interopDefault(_screen);
-const buttons = new _buttonsDefault.default();
-const screen = new _screenDefault.default();
+const config = new _configDefault.default({
+    dev: {
+        allowFullscreen: true,
+        allowPreventContextMenu: true,
+        allowKeyboardPreventDefault: false,
+        allowTouchPreventDefault: true,
+        allowWarnOnReload: false
+    }
+});
 new _consoleDefault.default({
-    buttons,
-    screen
+    config
 });
 
-},{"../src/Console":"g5VmO","@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV","~src/Buttons":"iI12F","../src/Screen":"bhXCB"}],"g5VmO":[function(require,module,exports) {
+},{"../src/Console":"g5VmO","@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV","~src/Config":"d3I3I"}],"g5VmO":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "default", ()=>Console
 );
+var _buttons = require("./Buttons");
+var _buttonsDefault = parcelHelpers.interopDefault(_buttons);
+var _screen = require("./Screen");
+var _screenDefault = parcelHelpers.interopDefault(_screen);
 class Console {
     constructor(params){
         this.calculatedScreenDimensions = 256;
-        this.screen = params.screen;
-        this.buttons = params.buttons;
+        this.isPoweredOn = false;
+        this.config = params.config;
+        this.buttons = new _buttonsDefault.default({
+            config: this.config
+        });
+        this.screen = new _screenDefault.default();
+        this.containerElement = document.querySelector('#xypixel');
         this.leftConElement = document.querySelector('#leftCon');
         this.rightConElement = document.querySelector('#rightCon');
-        document.addEventListener('contextmenu', (e)=>e.preventDefault()
-        );
+        const handleInitialInteraction = (event)=>{
+            if (!this.isPoweredOn) {
+                if (this.config.dev.allowFullscreen) document.documentElement.requestFullscreen();
+                if (this.config.dev.allowPreventContextMenu) document.addEventListener('contextmenu', (e)=>e.preventDefault()
+                );
+                if (this.config.dev.allowWarnOnReload) window.onbeforeunload = ()=>true
+                ;
+                this.powerOn();
+            }
+        };
+        document.addEventListener('keydown', handleInitialInteraction, false);
+        document.addEventListener('touch', handleInitialInteraction, false);
+        document.addEventListener('click', handleInitialInteraction, false);
         this.calculatePositionAndScale();
         window.addEventListener('resize', ()=>{
             this.calculatePositionAndScale();
@@ -520,8 +544,28 @@ class Console {
         const conHeight = this.calculatedScreenDimensions;
         const dPadDimensions = conWidth / 1.5;
         const dPadIndividualButtonDimensions = dPadDimensions / 3;
-        const dPadLeft = leftConLeft + conWidth / 2 - dPadDimensions / 2;
-        const dPadTop = leftConTop + conHeight / 2 - dPadDimensions / 2;
+        const dPadLeft = conWidth / 2 - dPadDimensions / 2;
+        const dPadTop = conHeight / 2 - dPadDimensions / 2;
+        const actionBtnsWidth = conWidth / 1.5;
+        const actionBtnsHeight = actionBtnsWidth / 1.2;
+        const actionBtnDimensions = conWidth / 3.5;
+        const actionBtnCenterX = conWidth / 2;
+        const actionBtnCenterY = conHeight / 2;
+        const adminBtnDimensions = conWidth / 6;
+        this.screen.element.style.left = `${screenLeft}px`;
+        this.screen.element.style.top = `${screenTop}px`;
+        this.leftConElement.style.left = `${leftConLeft}px`;
+        this.leftConElement.style.top = `${leftConTop}px`;
+        this.leftConElement.style.width = `${conWidth}px`;
+        this.leftConElement.style.height = `${conHeight}px`;
+        this.rightConElement.style.left = `${rightConLeft}px`;
+        this.rightConElement.style.top = `${rightConTop}px`;
+        this.rightConElement.style.width = `${conWidth}px`;
+        this.rightConElement.style.height = `${conHeight}px`;
+        this.buttons.dPadElement.style.left = `${dPadLeft}px`;
+        this.buttons.dPadElement.style.top = `${dPadTop}px`;
+        this.buttons.dPadElement.style.width = `${dPadDimensions}px`;
+        this.buttons.dPadElement.style.height = `${dPadDimensions}px`;
         (()=>{
             let x = 0;
             let y = 0;
@@ -534,21 +578,6 @@ class Console {
                 x = x !== 2 ? x + 1 : 0;
             });
         })();
-        const actionBtnsWidth = conWidth / 1.5;
-        const actionBtnsHeight = actionBtnsWidth / 1.2;
-        const actionBtnDimensions = conWidth / 3.5;
-        const actionBtnCenterX = rightConLeft + conWidth / 2;
-        const actionBtnCenterY = rightConTop + conHeight / 2;
-        this.screen.element.style.left = `${screenLeft}px`;
-        this.screen.element.style.top = `${screenTop}px`;
-        this.buttons.dPadElement.style.left = `${dPadLeft}px`;
-        this.buttons.dPadElement.style.top = `${dPadTop}px`;
-        this.buttons.dPadElement.style.width = `${dPadDimensions}px`;
-        this.buttons.dPadElement.style.height = `${dPadDimensions}px`;
-        this.buttons.dPadElement.style.left = `${dPadLeft}px`;
-        this.buttons.dPadElement.style.top = `${dPadTop}px`;
-        this.buttons.dPadElement.style.width = `${dPadDimensions}px`;
-        this.buttons.dPadElement.style.height = `${dPadDimensions}px`;
         this.buttons.actionBtnsElement.style.left = `${actionBtnCenterX - actionBtnsWidth / 2}px`;
         this.buttons.actionBtnsElement.style.top = `${actionBtnCenterY - actionBtnsHeight / 2}px`;
         this.buttons.actionBtnsElement.style.width = `${actionBtnsWidth}px`;
@@ -561,18 +590,23 @@ class Console {
         this.buttons.actionBtnIIElement.style.top = `0`;
         this.buttons.actionBtnIIElement.style.width = `${actionBtnDimensions}px`;
         this.buttons.actionBtnIIElement.style.height = `${actionBtnDimensions}px`;
-        this.leftConElement.style.left = `${leftConLeft}px`;
-        this.leftConElement.style.top = `${leftConTop}px`;
-        this.leftConElement.style.width = `${conWidth}px`;
-        this.leftConElement.style.height = `${conHeight}px`;
-        this.rightConElement.style.left = `${rightConLeft}px`;
-        this.rightConElement.style.top = `${rightConTop}px`;
-        this.rightConElement.style.width = `${conWidth}px`;
-        this.rightConElement.style.height = `${conHeight}px`;
+        this.buttons.powerBtnElement.style.left = `${adminBtnDimensions}px`;
+        this.buttons.powerBtnElement.style.top = `${adminBtnDimensions}px`;
+        this.buttons.powerBtnElement.style.width = `${adminBtnDimensions}px`;
+        this.buttons.powerBtnElement.style.height = `${adminBtnDimensions}px`;
+        this.buttons.settingsBtnElement.style.left = `${conWidth - adminBtnDimensions * 2}px`;
+        this.buttons.settingsBtnElement.style.top = `${adminBtnDimensions}px`;
+        this.buttons.settingsBtnElement.style.width = `${adminBtnDimensions}px`;
+        this.buttons.settingsBtnElement.style.height = `${adminBtnDimensions}px`;
+    }
+    powerOn() {
+        this.isPoweredOn = true;
+        this.buttons.powerOn();
+    // this.screen.powerOn();
     }
 }
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV"}],"ciiiV":[function(require,module,exports) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV","./Buttons":"iI12F","./Screen":"bhXCB"}],"ciiiV":[function(require,module,exports) {
 exports.interopDefault = function(a) {
     return a && a.__esModule ? a : {
         default: a
@@ -623,7 +657,7 @@ var DPadButtons1;
 })(DPadButtons1 || (DPadButtons1 = {
 }));
 class Buttons {
-    constructor(){
+    constructor(params){
         this.dPadButtons = [
             {
                 name: DPadButtons1.LtUp,
@@ -670,6 +704,7 @@ class Buttons {
         this.isLtDnPressed = false;
         this.isDnPressed = false;
         this.isRtDnPressed = false;
+        this.config = params.config;
         this.dPadElement = document.querySelector('#dPad');
         this.dPadButtons.forEach((item)=>{
             item.element = document.querySelector(`#${item.name}`);
@@ -677,39 +712,8 @@ class Buttons {
         this.actionBtnsElement = document.querySelector('#actionBtns');
         this.actionBtnIElement = document.querySelector('#actionBtnI');
         this.actionBtnIIElement = document.querySelector('#actionBtnII');
-        this.dPadElement.addEventListener('touchstart', (event)=>{
-            this.setActiveDPadElements(this.dPadButtons.find((item)=>item.name === event.target.id
-            ));
-        }, false);
-        this.dPadElement.addEventListener('touchmove', (event)=>{
-            event.preventDefault();
-            this.dPadButtons.forEach((item)=>{
-                item.element?.classList.remove('active');
-            });
-            const firstTouch = event.touches[0];
-            this.dPadButtons.forEach((item)=>{
-                if (_collision.hitCheckPointRect(new _geometry.Point(firstTouch.pageX, firstTouch.pageY), item.element.getBoundingClientRect())) this.setActiveDPadElements(item);
-            });
-        }, false);
-        this.dPadElement.addEventListener('touchend', (event)=>{
-            this.dPadButtons.forEach((item)=>{
-                item.element?.classList.remove('active');
-            });
-        }, false);
-        this.actionBtnsElement.addEventListener('touchstart', (event)=>{
-            event.target.classList.add('active');
-        }, false);
-        this.actionBtnsElement.addEventListener('touchmove', (event)=>{
-            event.preventDefault();
-            const firstTouch = event.touches[0];
-            this.actionBtnIElement.classList.remove('active');
-            this.actionBtnIIElement.classList.remove('active');
-            if (_collision.hitCheckPointRect(new _geometry.Point(firstTouch.pageX, firstTouch.pageY), this.actionBtnIElement.getBoundingClientRect())) this.actionBtnIElement.classList.add('active');
-            else if (_collision.hitCheckPointRect(new _geometry.Point(firstTouch.pageX, firstTouch.pageY), this.actionBtnIIElement.getBoundingClientRect())) this.actionBtnIIElement.classList.add('active');
-        }, false);
-        this.actionBtnsElement.addEventListener('touchend', (event)=>{
-            event.target.classList.remove('active');
-        }, false);
+        this.powerBtnElement = document.querySelector('#powerBtn');
+        this.settingsBtnElement = document.querySelector('#settingsBtn');
     }
     setActiveDPadElements(item1) {
         if (item1.name === DPadButtons1.LtUp) {
@@ -733,6 +737,43 @@ class Buttons {
             this.dPadButtons.find((item)=>item.name === DPadButtons1.Dn
             )?.element?.classList.add('active');
         } else item1.element?.classList.add('active');
+    }
+    powerOn() {
+        this.powerBtnElement.classList.remove('off');
+        this.powerBtnElement.classList.add('on');
+        this.dPadElement.addEventListener('touchstart', (event)=>{
+            this.setActiveDPadElements(this.dPadButtons.find((item)=>item.name === event.target.id
+            ));
+        }, false);
+        this.dPadElement.addEventListener('touchmove', (event)=>{
+            if (this.config.dev.allowTouchPreventDefault) event.preventDefault();
+            this.dPadButtons.forEach((item)=>{
+                item.element?.classList.remove('active');
+            });
+            const firstTouch = event.touches[0];
+            this.dPadButtons.forEach((item)=>{
+                if (_collision.hitCheckPointRect(new _geometry.Point(firstTouch.pageX, firstTouch.pageY), item.element.getBoundingClientRect())) this.setActiveDPadElements(item);
+            });
+        }, false);
+        this.dPadElement.addEventListener('touchend', (event)=>{
+            this.dPadButtons.forEach((item)=>{
+                item.element?.classList.remove('active');
+            });
+        }, false);
+        this.actionBtnsElement.addEventListener('touchstart', (event)=>{
+            event.target.classList.add('active');
+        }, false);
+        this.actionBtnsElement.addEventListener('touchmove', (event)=>{
+            if (this.config.dev.allowTouchPreventDefault) event.preventDefault();
+            const firstTouch = event.touches[0];
+            this.actionBtnIElement.classList.remove('active');
+            this.actionBtnIIElement.classList.remove('active');
+            if (_collision.hitCheckPointRect(new _geometry.Point(firstTouch.pageX, firstTouch.pageY), this.actionBtnIElement.getBoundingClientRect())) this.actionBtnIElement.classList.add('active');
+            else if (_collision.hitCheckPointRect(new _geometry.Point(firstTouch.pageX, firstTouch.pageY), this.actionBtnIIElement.getBoundingClientRect())) this.actionBtnIIElement.classList.add('active');
+        }, false);
+        this.actionBtnsElement.addEventListener('touchend', (event)=>{
+            event.target.classList.remove('active');
+        }, false);
     }
 }
 
@@ -797,6 +838,32 @@ class Screen {
     setPixelScale(calculatedScreenDimensions) {
         const scale = calculatedScreenDimensions / this.dimensions;
         this.pixelScale = scale > this.antiAliasingScaleThreshold ? Math.floor(scale) : scale;
+    }
+}
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV"}],"d3I3I":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "defaults", ()=>defaults
+);
+parcelHelpers.export(exports, "default", ()=>Config
+);
+const defaults = {
+    dev: {
+        allowFullscreen: true,
+        allowPreventContextMenu: true,
+        allowTouchPreventDefault: true,
+        allowKeyboardPreventDefault: true,
+        allowWarnOnReload: true
+    }
+};
+class Config {
+    constructor(params = {
+    }){
+        this.dev = {
+            ...defaults.dev,
+            ...params.dev
+        };
     }
 }
 
